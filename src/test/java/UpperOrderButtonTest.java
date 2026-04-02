@@ -1,36 +1,30 @@
 package org.example.tests;
 
 import org.example.MainPage;
-import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
-public class UpperOrderButtonTest {
-    private WebDriver driver;
+public class UpperOrderButtonTest extends org.example.tests.BaseTest {
+    private MainPage mainPage;
 
+    @Override
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
+        super.setUp(); // Вызов setUp из BaseTest для инициализации драйвера и перехода на сайт
+        mainPage = new MainPage(driver); // Создать объект главной страницы после инициализации драйвера
     }
 
     @Test
     public void errorOrderTest() {
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-
-
-        // Создание объекта главной страницы с передачей драйвера
-        MainPage objMainPage = new MainPage(driver);
-
         // Нажатие на верхнюю кнопку "ЗАКАЗАТЬ"
-        objMainPage.clickUpperOrderButton();
+        mainPage.clickUpperOrderButton();
 
-    }
-
-    @After
-    public void tearDown(){
-        driver.quit();
-
+        // Проверка: после нажатия кнопки должна появиться форма заказа
+        Assert.assertTrue(
+                "Форма заказа не появилась после нажатия верхней кнопки 'ЗАКАЗАТЬ'",
+                mainPage.isOrderFormVisible()
+        );
     }
 }
