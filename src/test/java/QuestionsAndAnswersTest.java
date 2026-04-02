@@ -1,66 +1,63 @@
 package org.example.tests;
 
-import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
 
 // Класс автотеста
+@RunWith(Parameterized.class)
+public class QuestionsAndAnswersTest extends org.example.tests.BaseTest {
+    private org.example.MainPage mainPage;
 
-public class QuestionsAndAnswersTest {
-    private WebDriver driver;
+    // Поля для параметризованных данных
+    private final String expectedQuestion;
+    private final String expectedAnswer;
+    private final int questionNumber; // номер вопроса для клика
 
-    @Test
-    public void testQuestionsAndAnswers() {
-        // Инициализация драйвера Chrome
-        driver = new ChromeDriver();
-        // Переход на тестируемый сайт
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-
-        // Создание объекта главной страницы с передачей драйвера
-        org.example.MainPage objMainPage = new org.example.MainPage(driver);
-
-        // Нажатие на кнопку "да все привыкли"
-        objMainPage.clickCookieButton();
-
-        // Прокликивание всех вопросов и вывод пар "вопрос-ответ" в консоль
-        System.out.println("ВОПРОС-ОТВЕТ:");
-        for (int i = 0; i < 8; i++) {
-            // Кликаем на вопрос, чтобы открыть ответ
-            objMainPage.clickQuestionButton(i);
-            // Ждём прогрузки ответа
-            objMainPage.waitForAnswer(i);
-
-            // Получаем текст вопроса и ответа
-            String actualQuestionText = objMainPage.getQuestionText(i);
-            String actualAnswerText = objMainPage.getAnswerText(i);
-
-            // Выводим пару "вопрос-ответ" в виде сообщения для наглядности
-            System.out.println("Вопрос №" + (i + 1) + ": " + actualQuestionText);
-            System.out.println("Ответ №" + (i + 1) + ": " + actualAnswerText);
-            System.out.println("---");
-        }
-
-        // Сравнение всех вопросов и ответов, сохранение результата (true/false)
-        boolean result = objMainPage.compareQuestionsAndAnswers();
-        String message;
-
-        // Определение итогового сообщения на основе результата сравнения
-        if (result) {
-            message = "Все совпадает";
-        } else {
-            message = "Есть несоответствия";
-        }
-
-        // Вывод итогового результата проверки в консоль
-        System.out.println("Результаты проверки: " + message);
+    // Конструктор для получения параметров
+    public QuestionsAndAnswersTest(String expectedQuestion, String expectedAnswer, int questionNumber) {
+        this.expectedQuestion = expectedQuestion;
+        this.expectedAnswer = expectedAnswer;
+        this.questionNumber = questionNumber;
     }
 
-    @After
-    public void tearDown() {
-        // Метод для завершения работы с драйвером
-        if (driver != null) {
-            driver.quit();
-        }
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp(); // Вызов setUp из BaseTest для инициализации драйвера и перехода на сайт
+        mainPage = new org.example.MainPage(driver);
+        // Нажатие на кнопку "да все привыкли"
+        mainPage.clickCookieButton();
+    }
+
+    // Параметры для теста. Данные берутся из MainPage
+    @Parameterized.Parameters
+    public static Collection<Object[]> getQaA() {
+        return org.example.MainPage.getTestData();
+    }
+
+    @Test
+    public void testSingleQuestionAndAnswer() {
+        // Кликнуть на вопрос, чтобы открыть ответ
+        mainPage.clickQuestionButton(questionNumber);
+        // Ждать прогрузки ответа
+        mainPage.waitForAnswer(questionNumber);
+
+        // Получить текст вопроса и ответа
+        String actualQuestionText = mainPage.getQuestionText(questionNumber);
+        String actualAnswerText = mainPage.getAnswerText(questionNumber);
+
+        // Вывести пару "вопрос-ответ" в виде сообщения для наглядности
+        System.out.println("Вопрос №" + (questionNumber + 1) + ": " + actualQuestionText);
+        System.out.println("Ответ №" + (questionNumber + 1) + ": " + actualAnswerText);
+        System.out.println("---");
+
+        // Сравнить с ожидаемыми значениями
+        assertEquals("Вопрос не совпадает", expectedQuestion, actualQuestionText);
+        assertEquals("Ответ не совпадает", expectedAnswer, actualAnswerText);
     }
 }
