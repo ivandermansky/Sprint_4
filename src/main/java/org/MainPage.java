@@ -142,5 +142,6 @@ public class MainPage {
 
         // Вернуть true, только если и вопрос, и ответ совпадают
         return isQuestionMatch && isAnswerMatch;
+        
     }
 }
