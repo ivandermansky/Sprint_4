@@ -12,32 +12,39 @@ public class OrderPage {
     private WebDriverWait wait;
 
     // Локаторы элементов на главной странице, чтобы перейти на страницу заказа
-    private By lowerOrderButton = By.xpath("//*[@id=\"root\"]/div/div/div[4]/div[2]/div[5]/button");
     private By cookieButton = By.className("App_CookieButton__3cvqF");
+    private By lowerOrderButton = By.xpath("//button[contains(@class, 'Button_Button') and contains(text(), 'Заказать')]");
 
     // Локаторы элементов для страницы заказа
+    private By nameField = By.xpath("//input[contains(@class, 'Input_Input') and @placeholder='* Имя']");
+    private By surnameField = By.xpath("//input[contains(@class, 'Input_Input') and @placeholder='* Фамилия']");
+    private By addressField = By.xpath("//input[contains(@class, 'Input_Input') and @placeholder='* Адрес: куда привезти заказ']");
+    private By metroStation = By.xpath("//input[contains(@class, 'select-search__input') and @placeholder='* Станция метро']");
+    private By phoneNumberField = By.xpath("//input[contains(@class, 'Input_Input') and @placeholder='* Телефон: на него позвонит курьер']");
+    private By buttonNext = By.xpath("//button[contains(@class, 'Button_Button') and contains(text(), 'Далее')]");
+    private By dateOfDelivery = By.xpath("//input[contains(@class, 'Input_Input') and @placeholder='* Когда привезти самокат']");
+    private By aprilFourth = By.xpath("//div[contains(@aria-label, 'суббота, 4-е апреля 2026 г.') and . = '4']");
+    private By rentalPeriod = By.xpath("//div[contains(@class, 'Dropdown-placeholder') and contains(text(), '* Срок аренды')]");
+    private By oneDayRental = By.xpath("//div[contains(@class, 'Dropdown-option') and contains(text(), 'сутки')]");
+    private By blackPearl = By.xpath("//label[contains(@class, 'Checkbox_Label') and contains(text(), 'чёрный жемчуг')]");
+    private By greyDespair = By.id("grey");
+    private By commentForCourierField = By.cssSelector("input.Input_Input__1iN_Z.Input_Responsible__1jDKN[placeholder='Комментарий для курьера']");
 
-    private By name_field = By.xpath("//*[@id=\"root\"]/div/div[2]/div[2]/div[1]/input");
-    private By surname_field = By.xpath("//*[@id=\"root\"]/div/div[2]/div[2]/div[2]/input");
-    private By address_field = By.xpath("//*[@id=\"root\"]/div/div[2]/div[2]/div[3]/input");
-    private By metro_station = By.xpath("//*[@id=\"root\"]/div/div[2]/div[2]/div[4]/div/div/input");
-    private By phone_number_field = By.xpath("//*[@id=\"root\"]/div/div[2]/div[2]/div[5]/input");
-    private By button_next = By.xpath("//*[@id=\"root\"]/div/div[2]/div[3]/button");
-    private By date_of_delivery = By.xpath("//*[@id=\"root\"]/div/div[2]/div[2]/div[1]/div[1]/div/input");
-    private By april4 = By.xpath("//*[@id=\"root\"]/div/div[2]/div[2]/div[1]/div[2]/div[2]/div/div/div[2]/div[2]/div[6]/div[6]");
-    private By rental_period = By.xpath("//*[@id=\"root\"]/div/div[2]/div[2]/div[2]/div/div[1]");
-    private By one_day_rental = By.xpath ("//*[@id=\"root\"]/div/div[2]/div[2]/div[2]/div[2]/div[1]");
+    //private By orderButton = By.xpath("//button[@class='Button_Button_ra12g Button_Middle_1CSJM' and text()='Заказать']");
+    //private By orderButton = By.cssSelector(".Order_Buttons_1xGrp > button.Button_Button_ra12g.Button_Middle_1CSJM:not(.Button_Inverted_3IF)");
+    //private By orderButton = By.cssSelector(".Order_Buttons_1xGrp > button.Button_Middle_1CSJM");
+    //private By orderButton = By.xpath("//button[contains(@class, 'Button_Button_ra12g Button_Middle_1CSJM') and contains(text(), 'Заказать')]");
+    // Локаторы выше для кнопки orderButton не работают. Я всё перепробовал
+    private By orderButton = By.xpath("//*[@id=\"root\"]/div/div[2]/div[3]/button[2]");
 
-    private By black_pearl = By.xpath("//*[@id=\"root\"]/div/div[2]/div[2]/div[3]/label[1]");
-    private By grey_despair_lol = By.xpath("//*[@id=\"grey\"]");
-    private By comment_for_courier_field = By.xpath("//*[@id=\"root\"]/div/div[2]/div[2]/div[4]/input");
-    private By order_button = By.xpath("//*[@id=\"root\"]/div/div[2]/div[3]/button[2]");
-    private By yes_button = By.xpath("//button[contains(text(), 'Да')]");
-    private By check_status_button = By.xpath("//*[@id=\"root\"]/div/div[2]/div[5]/div[2]/button");
+    private By confirmationQuestion = By.xpath("//*[contains(text(), 'Хотите оформить заказ?']");
+    private By yesButton = By.xpath("//button[contains(@class, 'Button_Button') and contains(text(), 'Да')]");
+    private By orderIsConfirmedText = By.xpath("//*[contains(text(), 'Заказ оформлен']");
+    private By checkStatusButton = By.xpath("//button[contains(@class, 'Button_Button') and contains(text(), 'Посмотреть статус')]");
 
     public OrderPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(3));
     }
 
     public void clickCookieButton() {
@@ -53,132 +60,151 @@ public class OrderPage {
         ((JavascriptExecutor) driver).executeScript(
                 ("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});"), button);
 
-
         WebElement clickableLowerOrderButton = wait.until(ExpectedConditions.elementToBeClickable(lowerOrderButton));
         clickableLowerOrderButton.click();
     }
 
     public void sendName(String name) {
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(name_field));
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(nameField));
         element.clear();
         element.click();
         element.sendKeys(name);
     }
 
     public void sendSurname(String surname) {
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(surname_field));
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(surnameField));
         element.clear();
         element.click();
         element.sendKeys(surname);
     }
 
     public void sendAddress(String address) {
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(address_field));
-        element.click();
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(addressField));
         element.clear();
+        element.click();
         element.sendKeys(address);
     }
 
     public void clickAndSelectMetroStationList(String metro) {
         // Клик по полю ввода станции метро
-        WebElement metroElement = wait.until(ExpectedConditions.elementToBeClickable(metro_station));
+        WebElement metroElement = wait.until(ExpectedConditions.elementToBeClickable(metroStation));
         metroElement.click();
 
         // Очистка поля и ввод названия станции
         metroElement.clear();
         metroElement.sendKeys(metro);
 
-
-
         // Имитация нажатия клавиш: стрелка "вниз" для прокрутки списка и Enter для подтверждения выбора
         metroElement.sendKeys(Keys.ARROW_DOWN);
         metroElement.sendKeys(Keys.ENTER);
     }
+
     public void sendPhoneNumber(String phoneNumber) {
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(phone_number_field));
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(phoneNumberField));
         element.clear();
         element.sendKeys(phoneNumber);
     }
 
     public void clickButtonNext() {
-        WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(button_next));
-        nextButton.click();    }
-
-    public void clickDateOfDeliveryButton() {
-        WebElement dateOfDeliveryButton = wait.until(ExpectedConditions.elementToBeClickable(date_of_delivery));
-        dateOfDeliveryButton.click();
-
+        WebElement nextButton = wait.until(ExpectedConditions.elementToBeClickable(buttonNext));
+        nextButton.click();
     }
 
+    public void clickDateOfDeliveryButton() {
+        WebElement dateOfDeliveryButton = wait.until(ExpectedConditions.elementToBeClickable(dateOfDelivery));
+        dateOfDeliveryButton.click();
+    }
 
-    public void clickFourOfAprilButton(){
-        WebElement FourOfAprilButton = wait.until(ExpectedConditions.elementToBeClickable(april4));
+    public void clickFourthOfAprilButton(){
+        WebElement FourOfAprilButton = wait.until(ExpectedConditions.elementToBeClickable(aprilFourth));
         FourOfAprilButton.click();
     }
 
-
-
     public void clickRentalDateButton(){
-        WebElement RentalDateButton = wait.until(ExpectedConditions.elementToBeClickable(rental_period));
+        WebElement RentalDateButton = wait.until(ExpectedConditions.elementToBeClickable(rentalPeriod));
         RentalDateButton.click();
     }
 
     public void clickOneDayRentalButton(){
-        WebElement OneDayRentalButton = wait.until(ExpectedConditions.elementToBeClickable(one_day_rental));
+        WebElement OneDayRentalButton = wait.until(ExpectedConditions.elementToBeClickable(oneDayRental));
         OneDayRentalButton.click();
     }
 
     public void clickBlackPearlButton(){
-        WebElement BlackPearlButton = wait.until(ExpectedConditions.elementToBeClickable(black_pearl));
+        WebElement BlackPearlButton = wait.until(ExpectedConditions.elementToBeClickable(blackPearl));
         BlackPearlButton.click();
     }
+
     public void clickGreyDespairButton(){
-        WebElement GreyDespairButton = wait.until(ExpectedConditions.elementToBeClickable(grey_despair_lol));
+        WebElement GreyDespairButton = wait.until(ExpectedConditions.elementToBeClickable(greyDespair));
         GreyDespairButton.click();
     }
 
-
-
     public void clickCommentForCourierField(){
-        WebElement CommentForCourierButton = wait.until(ExpectedConditions.elementToBeClickable(comment_for_courier_field));
+        WebElement CommentForCourierButton = wait.until(ExpectedConditions.elementToBeClickable(commentForCourierField));
         CommentForCourierButton.click();
-
     }
 
     public void leaveCommentForCourier(String comment){
-        WebElement CommentForCourier = wait.until(ExpectedConditions.elementToBeClickable(comment_for_courier_field));
+        WebElement CommentForCourier = wait.until(ExpectedConditions.elementToBeClickable(commentForCourierField));
         CommentForCourier.clear();
         CommentForCourier.sendKeys(comment);
     }
 
     public void clickOrderButton() {
-        WebElement OrderButton = wait.until(ExpectedConditions.elementToBeClickable(order_button));
-
+        WebElement OrderButton = wait.until(ExpectedConditions.elementToBeClickable(orderButton));
         OrderButton.click();
     }
 
+    public void confirmationQuestionCheck(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(
+                confirmationQuestion));
+    }
 
     public void clickYesButton(){
-        WebElement YesButton = wait.until(ExpectedConditions.elementToBeClickable(yes_button));
+        WebElement YesButton = wait.until(ExpectedConditions.elementToBeClickable(yesButton));
         YesButton.click();
     }
 
-
     public void clickCheckStatusButton(){
-        WebElement CheckStatusButton = wait.until(ExpectedConditions.elementToBeClickable(check_status_button));
+        WebElement CheckStatusButton = wait.until(ExpectedConditions.elementToBeClickable(checkStatusButton));
         CheckStatusButton.click();
     }
-
 
     public void assertOrderIsConfirmed() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(
-                By.xpath("//*[contains(text(), 'Заказ оформлен')]")
-        ));
+                orderIsConfirmedText)
+        );
         String text = element.getText();
         assertEquals("Текст должен начинаться с 'Заказ оформлен'",
                 true,
                 text.startsWith("Заказ оформлен"));
     }
 
+    // Объединение методов
+    public void checkOrderPageAllSteps(String name, String surname, String address, String metro, String phoneNumber, String comment){
+        clickCookieButton();
+        scrollAndClickLowerOrderButton();
+        sendName(name);
+        sendSurname(surname);
+        sendAddress(address);
+        clickAndSelectMetroStationList(metro);
+        sendPhoneNumber(phoneNumber);
+        clickButtonNext();
+        clickDateOfDeliveryButton();
+        clickFourthOfAprilButton();
+        clickRentalDateButton();
+        clickOneDayRentalButton();
+        clickBlackPearlButton();
+        clickGreyDespairButton();
+        clickCommentForCourierField();
+        leaveCommentForCourier(comment);
+        clickOrderButton();
+        confirmationQuestionCheck();
+        clickYesButton();
+        clickCheckStatusButton();
+        assertOrderIsConfirmed();
+    }
 }
