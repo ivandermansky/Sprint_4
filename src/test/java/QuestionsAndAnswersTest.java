@@ -61,3 +61,5 @@ public class QuestionsAndAnswersTest extends org.example.tests.BaseTest {
         assertEquals("Ответ не совпадает", expectedAnswer, actualAnswerText);
     }
 }
+
+
