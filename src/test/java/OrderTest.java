@@ -51,3 +51,4 @@ public class OrderTest extends org.example.tests.BaseTest {
         orderPage.checkOrderPageAllSteps(name, surname, address, metro, phoneNumber, comment);
     }
 }
+
