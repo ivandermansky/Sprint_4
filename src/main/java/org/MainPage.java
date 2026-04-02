@@ -1,118 +1,80 @@
 package org.example;
 
-import org.openqa.selenium.By;
-import java.time.Duration;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class MainPage {
     private WebDriver driver;
+    private WebDriverWait wait;
 
+    // Переменные для текста вопросов-ответов сделаны статичными
+    // Все переменные переименованы
 
-    private final String QUESTION1_TEXT = "Сколько это стоит? И как оплатить?";
-    private By question1_locator = By.id("accordion__heading-0");
+    private static final String QUESTION_PRICE_TEXT = "Сколько это стоит? И как оплатить?";
+    private static final String QUESTION_QUANTITY_TEXT = "Хочу сразу несколько самокатов! Так можно?";
+    private static final String QUESTION_RENTALTIME_TEXT = "Как рассчитывается время аренды?";
+    private static final String QUESTION_TODAYRENTAL_TEXT = "Можно ли заказать самокат прямо на сегодня?";
+    private static final String QUESTION_EARLIERLATER_TEXT = "Можно ли продлить заказ или вернуть самокат раньше?";
+    private static final String QUESTION_CHARGER_TEXT = "Вы привозите зарядку вместе с самокатом?";
+    private static final String QUESTION_CANCEL_TEXT = "Можно ли отменить заказ?";
+    private static final String QUESTION_MKAD_TEXT = "Я жизу за МКАДом, привезёте?";
 
-    private final String QUESTION2_TEXT = "Хочу сразу несколько самокатов! Так можно?";
-    private By question2_locator = By.id("accordion__heading-1");
+    private static final String ANSWER_PRICE_TEXT = "Сутки — 400 рублей. Оплата курьеру — наличными или картой.";
+    private static final String ANSWER_QUANTITY_TEXT = "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим.";
+    private static final String ANSWER_RENTALTIME_TEXT = "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30.";
+    private static final String ANSWER_TODAYRENTAL_TEXT = "Только начиная с завтрашнего дня. Но скоро станем расторопнее.";
+    private static final String ANSWER_EARLIERAFTER_TEXT = "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010.";
+    private static final String ANSWER_CHARGER_TEXT = "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится.";
+    private static final String ANSWER_CANCEL_TEXT = "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои.";
+    private static final String ANSWER_MKAD_TEXT = "Да, обязательно. Всем самокатов! И Москве, и Московской области.";
 
-    private final String QUESTION3_TEXT = "Как рассчитывается время аренды?";
-    private By question3_locator = By.id("accordion__heading-2");
-
-    private final String QUESTION4_TEXT = "Можно ли заказать самокат прямо на сегодня?";
-    private By question4_locator = By.id("accordion__heading-3");
-
-    private final String QUESTION5_TEXT = "Можно ли продлить заказ или вернуть самокат раньше?";
-    private By question5_locator = By.id("accordion__heading-4");
-
-    private final String QUESTION6_TEXT = "Вы привозите зарядку вместе с самокатом?";
-    private By question6_locator = By.id("accordion__heading-5");
-
-    private final String QUESTION7_TEXT = "Можно ли отменить заказ?";
-    private By question7_locator = By.id("accordion__heading-6");
-
-    private final String QUESTION8_TEXT = "Я жизу за МКАДом, привезёте?"; // Исправлено: жизу → живу
-    private By question8_locator = By.id("accordion__heading-7");
-
-    private final String ANSWER1_TEXT = "Сутки — 400 рублей. Оплата курьеру — наличными или картой.";
-    private By ANSWER1_LOCATOR = By.id("accordion__panel-0");
-
-    private final String ANSWER2_TEXT = "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим.";
-    private By ANSWER2_LOCATOR = By.id("accordion__panel-1");
-
-    private final String ANSWER3_TEXT = "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30.";
-    private By ANSWER3_LOCATOR = By.id("accordion__panel-2");
-
-    private final String ANSWER4_TEXT = "Только начиная с завтрашнего дня. Но скоро станем расторопнее.";
-    private By ANSWER4_LOCATOR = By.id("accordion__panel-3");
-
-    private final String ANSWER5_TEXT = "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010.";
-    private By ANSWER5_LOCATOR = By.id("accordion__panel-4");
-
-    private final String ANSWER6_TEXT = "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится.";
-    private By ANSWER6_LOCATOR = By.id("accordion__panel-5");
-
-    private final String ANSWER7_TEXT = "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои.";
-    private By ANSWER7_LOCATOR = By.id("accordion__panel-6");
-
-    private final String ANSWER8_TEXT = "Да, обязательно. Всем самокатов! И Москве, и Московской области.";
-    private By ANSWER8_LOCATOR = By.id("accordion__panel-7");
-
+    // Локаторы элементов
     private By cookieButton = By.className("App_CookieButton__3cvqF");
+    private By upperOrderButton = By.xpath(".//button[@class='Button_Button__ra12g' and (text() = 'Заказать')]");
+    private By orderFormText = By.xpath("//*[contains(text(), 'Для кого самокат')]"); // Локатор для текста "Для кого самокат"
 
-    private By upperOrderButton = By.xpath("//*[@id=\"root\"]/div/div/div[1]/div[2]/button[1]");
-    private By lowerOrderButton = By.xpath("//*[@id=\"root\"]/div/div/div[4]/div[2]/div[5]/button");
-
-
-    private By[] questionLocators = {
-            question1_locator, question2_locator, question3_locator,
-            question4_locator, question5_locator, question6_locator,
-            question7_locator, question8_locator
+    private static String[] expectedQuestionTexts = {
+            QUESTION_PRICE_TEXT, QUESTION_QUANTITY_TEXT, QUESTION_RENTALTIME_TEXT,
+            QUESTION_TODAYRENTAL_TEXT, QUESTION_EARLIERLATER_TEXT, QUESTION_CHARGER_TEXT,
+            QUESTION_CANCEL_TEXT, QUESTION_MKAD_TEXT
     };
 
-    private By[] answerLocators = {
-            ANSWER1_LOCATOR, ANSWER2_LOCATOR, ANSWER3_LOCATOR,
-            ANSWER4_LOCATOR, ANSWER5_LOCATOR, ANSWER6_LOCATOR,
-            ANSWER7_LOCATOR, ANSWER8_LOCATOR
-    };
-
-    private String[] expectedQuestionTexts = {
-            QUESTION1_TEXT, QUESTION2_TEXT, QUESTION3_TEXT,
-            QUESTION4_TEXT, QUESTION5_TEXT, QUESTION6_TEXT,
-            QUESTION7_TEXT, QUESTION8_TEXT
-    };
-
-    private String[] expectedAnswerTexts = {
-            ANSWER1_TEXT, ANSWER2_TEXT, ANSWER3_TEXT,
-            ANSWER4_TEXT, ANSWER5_TEXT, ANSWER6_TEXT,
-            ANSWER7_TEXT, ANSWER8_TEXT
+    private static String[] expectedAnswerTexts = {
+            ANSWER_PRICE_TEXT, ANSWER_QUANTITY_TEXT, ANSWER_RENTALTIME_TEXT,
+            ANSWER_TODAYRENTAL_TEXT, ANSWER_EARLIERAFTER_TEXT, ANSWER_CHARGER_TEXT,
+            ANSWER_CANCEL_TEXT, ANSWER_MKAD_TEXT
     };
 
     // Конструктор класса
     public MainPage(WebDriver driver) {
-
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(3));
     }
 
-    // Метод для нажатия на верхнюю кнопку "ЗАКАЗАТЬ" (второй тестовый сценарий)
+    // Метод для нажатия на верхнюю кнопку "ЗАКАЗАТЬ"
     public void clickUpperOrderButton() {
         driver.findElement(upperOrderButton).click();
     }
 
-
-
-    // Метод для нажатия на кнопку "да все привыкли"
-    public void clickCookieButton () {
-        driver.findElement(cookieButton).click();
-
+    // Метод для проверки появления текста "Для кого самокат" после нажатия кнопки
+    public boolean isOrderFormVisible() {
+        WebElement element = driver.findElement(orderFormText);
+        return element.isDisplayed();
     }
 
+    // Метод для нажатия на кнопку "да все привыкли"
+    public void clickCookieButton() {
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(cookieButton));
+        element.click();
+    }
 
     // Метод для клика на вопрос по номеру (0–7)
     public void clickQuestionButton(int number) {
         By questionButton = By.id("accordion__heading-" + number);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         WebElement element = wait.until(
                 ExpectedConditions.elementToBeClickable(questionButton)
         );
@@ -121,12 +83,10 @@ public class MainPage {
 
     // Метод ожидания прогрузки ответа на вопрос
     public void waitForAnswer(int questionNumber) {
-        new WebDriverWait(driver, Duration.ofSeconds(2))
-                .until(ExpectedConditions.visibilityOfElementLocated(
-                        By.id("accordion__panel-" + questionNumber)
-                ));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.id("accordion__panel-" + questionNumber)
+        ));
     }
-
 
     // Метод для получения текста вопроса по номеру (0–7)
     public String getQuestionText(int number) {
@@ -135,40 +95,52 @@ public class MainPage {
         return element.getText();
     }
 
-    // Метод для получения текста вопроса по номеру
+    // Метод для получения текста ответа по номеру (0–7)
     public String getAnswerText(int number) {
         By answerLocator = By.id("accordion__panel-" + number);
         WebElement element = driver.findElement(answerLocator);
-        return  element.getText();
-
-
+        return element.getText();
     }
 
-    // Метод для сравнения всех вопросов и ответов с ожидаемыми значениями
-    public boolean compareQuestionsAndAnswers() {
-        boolean isCorresponding = true;
+    // Статический метод для предоставления тестовых данных параметризованному тесту
+    // Возвращает коллекцию массивов: [вопрос, ответ, номер]
+    public static Collection<Object[]> getTestData() {
+        return Arrays.asList(new Object[][] {
+                {expectedQuestionTexts[0], expectedAnswerTexts[0], 0},
+                {expectedQuestionTexts[1], expectedAnswerTexts[1], 1},
+                {expectedQuestionTexts[2], expectedAnswerTexts[2], 2},
+                {expectedQuestionTexts[3], expectedAnswerTexts[3], 3},
+                {expectedQuestionTexts[4], expectedAnswerTexts[4], 4},
+                {expectedQuestionTexts[5], expectedAnswerTexts[5], 5},
+                {expectedQuestionTexts[6], expectedAnswerTexts[6], 6},
+                {expectedQuestionTexts[7], expectedAnswerTexts[7], 7}
+        });
+    }
 
-        for (int i = 0; i < questionLocators.length; i++) {
-            clickQuestionButton(i); // Кликаем на вопрос, чтобы открыть ответ
+    // Метод для проверки одного вопроса и ответа по номеру
+    boolean checkSingleQuestionAndAnswer(int number, String expectedQuestion, String expectedAnswer) {
+        // Кликнуть на вопрос, чтобы открыть ответ
+        clickQuestionButton(number);
+        // Ждать прогрузки ответа
+        waitForAnswer(number);
 
+        // Получить текст вопроса и ответа
+        String actualQuestionText = getQuestionText(number);
+        String actualAnswerText = getAnswerText(number);
 
+        // Проверить соответствие
+        boolean isQuestionMatch = actualQuestionText.equals(expectedQuestion);
+        boolean isAnswerMatch = actualAnswerText.equals(expectedAnswer);
 
-            String actualQuestionText = driver.findElement(questionLocators[i]).getText();
-            if (!actualQuestionText.equals(expectedQuestionTexts[i])) {
-                isCorresponding = false;
-                System.out.println("Вопрос №" + (i + 1) + " не совпадает: ожидаемо '" + expectedQuestionTexts[i] + "', фактически '" + actualQuestionText + "'");
-            }
-
-            String actualAnswerText = driver.findElement(answerLocators[i]).getText();
-            if (actualAnswerText.isEmpty()) {
-                isCorresponding = false;
-                System.out.println("Ответ №" + (i + 1) + " пуст — возможно, элемент не виден или не загружен");
-            } else if (!actualAnswerText.equals(expectedAnswerTexts[i])) {
-                isCorresponding = false;
-                System.out.println("Ответ №" + (i + 1) + " не совпадает: ожидаемо '" + expectedAnswerTexts[i] + "', фактически '" + actualAnswerText + "'");
-            }
+        if (!isQuestionMatch) {
+            System.out.println("Вопрос №" + (number + 1) + " не совпадает: ожидаемо '" + expectedQuestion + "', фактически '" + actualQuestionText + "'");
         }
 
-        return isCorresponding;
+        if (!isAnswerMatch) {
+            System.out.println("Ответ №" + (number + 1) + " не совпадает: ожидаемо '" + expectedAnswer + "', фактически '" + actualAnswerText + "'");
+        }
+
+        // Вернуть true, только если и вопрос, и ответ совпадают
+        return isQuestionMatch && isAnswerMatch;
     }
 }
